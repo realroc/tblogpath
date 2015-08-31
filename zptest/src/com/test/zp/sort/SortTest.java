@@ -4,31 +4,19 @@ public class SortTest {
 	
 	public static void main(String[] args) {
 
-		int[] a = new int[10];
+		int[] a = CommonUtils.generateArray(20);
 		
-		for(int i=0; i<10; i++){
-			a[i] = (int) (10*Math.random());
-		}
+		CommonUtils.printArrays(a);
 		
-		CommonUtils.toString(a);
-		
-		quickSort(a);
-		CommonUtils.toString(a);
-		
-//		bubbleSort(a);
-//		CommonUtils.toString(a);
+		bubbleSort(a);
+		CommonUtils.printArrays(a);
 		
 //		insertSort(a);
-//		CommonUtils.toString(a);
+//		CommonUtils.printArrays(a);
 		
 //		selectSort(a);
-//		CommonUtils.toString(a);
+//		CommonUtils.printArrays(a);
 		
-	}
-	
-	private static int[] quickSort(int[] a) {
-		
-		return a;
 	}
 
 	/**
@@ -37,8 +25,8 @@ public class SortTest {
 	 * @return
 	 */
 	public static int[] bubbleSort(int[] a){
-		for(int i=0; i<10; i++){
-			for(int j=i+1; j<10; j++){
+		for(int i=0; i<a.length; i++){
+			for(int j=i+1; j<a.length; j++){
 				if(a[i] < a[j]){
 					CommonUtils.swap(a, i, j);
 				}
@@ -55,7 +43,7 @@ public class SortTest {
 	 * @return
 	 */
 	public static int[] insertSort(int[] a){
-		for(int i=1; i<10; i++){
+		for(int i=1; i<a.length; i++){
 			int k = i;
 			for(int j=i; j>=0; j--){
 				if(a[i] > a[j]){
@@ -81,9 +69,9 @@ public class SortTest {
 	 */
 	public static int[] selectSort(int[] a){
 		
-		for(int i=0; i<10; i++){
+		for(int i=0; i<a.length; i++){
 			int k = i;
-			for(int j=i; j<10; j++){
+			for(int j=i; j<a.length; j++){
 				if(a[j] > a[k]){
 					k =j ;
 				}
