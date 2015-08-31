@@ -10,21 +10,37 @@ public class SortTest {
 			a[i] = (int) (10*Math.random());
 		}
 		
-		toString(a);
-		bubbleSort(a);
-//		insertSort(a);
-//		selectSort(a);
+		CommonUtils.toString(a);
 		
-		toString(a);
+		quickSort(a);
+		CommonUtils.toString(a);
+		
+//		bubbleSort(a);
+//		CommonUtils.toString(a);
+		
+//		insertSort(a);
+//		CommonUtils.toString(a);
+		
+//		selectSort(a);
+//		CommonUtils.toString(a);
 		
 	}
 	
-	
+	private static int[] quickSort(int[] a) {
+		
+		return a;
+	}
+
+	/**
+	 * Bubble Sort
+	 * @param a
+	 * @return
+	 */
 	public static int[] bubbleSort(int[] a){
 		for(int i=0; i<10; i++){
 			for(int j=i+1; j<10; j++){
 				if(a[i] < a[j]){
-					swap(a, i, j);
+					CommonUtils.swap(a, i, j);
 				}
 			}
 		}
@@ -49,7 +65,7 @@ public class SortTest {
 			
 			int temp = a[i];
 			while(i>k){
-				swap(a, i, i-1);
+				CommonUtils.swap(a, i, i-1);
 				i--;
 			}
 			a[k] = temp ;
@@ -72,24 +88,10 @@ public class SortTest {
 					k =j ;
 				}
 			}
-			swap(a, k, i);
+			CommonUtils.swap(a, k, i);
 		}
 		
 		return a;
-	}
-	
-	public static void swap(int[] a, int i, int j){
-		int temp = a[i];
-		a[i] = a[j];
-		a[j] = temp ;
-	}
-	
-	public static void toString(int[] a){
-		StringBuffer sb = new StringBuffer();
-		for(int i=0; i<10; i++){
-			sb.append(a[i]).append("  ");
-		}
-		System.out.println(sb.toString());
 	}
 	
 }
