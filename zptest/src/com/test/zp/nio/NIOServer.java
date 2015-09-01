@@ -1,13 +1,8 @@
-package com.test.zp;
+package com.test.zp.nio;
 
-public class TestGit {
+public class NIOServer {
 
 	public static void main(String[] args) {
 
 	}
-
 }
-
-
-
-
