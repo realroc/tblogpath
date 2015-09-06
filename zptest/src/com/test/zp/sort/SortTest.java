@@ -4,12 +4,16 @@ public class SortTest {
 	
 	public static void main(String[] args) {
 
-		int[] a = CommonUtils.generateArray(20);
+		int[] a = CommonUtils.generateArray(5);
 		
 		CommonUtils.printArrays(a);
 		
-		bubbleSort(a);
+		quickSort(a, 0, a.length-1);
 		CommonUtils.printArrays(a);
+		
+		
+//		bubbleSort(a);
+//		CommonUtils.printArrays(a);
 		
 //		insertSort(a);
 //		CommonUtils.printArrays(a);
@@ -18,6 +22,33 @@ public class SortTest {
 //		CommonUtils.printArrays(a);
 		
 	}
+
+	
+	/**
+	 * quick Sort
+	 * @param a
+	 * @return
+	 */
+	public static void quickSort(int[] a, int begin, int end){
+		int base = a[begin] ;
+		while(begin <= end){
+			while(begin < end && a[end] <= base){
+				end--;
+			}
+			a[begin] = a[end];
+			while(begin <= end && a[begin] > base){
+				begin++;
+			}
+			a[end] = base;
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
 
 	/**
 	 * Bubble Sort
