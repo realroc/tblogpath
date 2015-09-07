@@ -127,26 +127,27 @@ public class ManyNodeTree
 	public static void main(String[] args)
 	{
 		List<TreeNode> treeNodes = new ArrayList<TreeNode>();
-//			treeNodes.add(new TreeNode("系统权限管理", "root"));
-//			treeNodes.add(new TreeNode("用户管理", "系统权限管理"));
-//			treeNodes.add(new TreeNode("角色管理", "系统权限管理"));
-//			treeNodes.add(new TreeNode("组管理", "系统权限管理"));
-//			treeNodes.add(new TreeNode("用户菜单管理", "系统权限管理"));
-//			treeNodes.add(new TreeNode("角色菜单管理", "系统权限管理"));
-//			treeNodes.add(new TreeNode("用户权限管理", "系统权限管理"));
-//			treeNodes.add(new TreeNode("站内信", "root"));
-//			treeNodes.add(new TreeNode("写信", "站内信"));
-//			treeNodes.add(new TreeNode("收信", "站内信"));
-//			treeNodes.add(new TreeNode("草稿", "站内信"));
+			treeNodes.add(new TreeNode("系统权限管理", "root"));
+			treeNodes.add(new TreeNode("用户管理", "系统权限管理"));
+			treeNodes.add(new TreeNode("角色管理", "系统权限管理"));
+			treeNodes.add(new TreeNode("组管理", "系统权限管理"));
+			treeNodes.add(new TreeNode("用户菜单管理", "系统权限管理"));
+			treeNodes.add(new TreeNode("角色菜单管理", "系统权限管理"));
+			treeNodes.add(new TreeNode("用户权限管理", "系统权限管理"));
+			treeNodes.add(new TreeNode("站内信", "root"));
+			treeNodes.add(new TreeNode("写信", "站内信"));
+			treeNodes.add(new TreeNode("收信", "站内信"));
+			treeNodes.add(new TreeNode("草稿", "站内信"));
 			
-		treeNodes.add(new TreeNode("2", "root"));
-		treeNodes.add(new TreeNode("3", "root"));
-		treeNodes.add(new TreeNode("5", "2"));
-		treeNodes.add(new TreeNode("4", "2"));
-		treeNodes.add(new TreeNode("7", "5"));
-		treeNodes.add(new TreeNode("9", "7"));
-		treeNodes.add(new TreeNode("11", "3"));
-		treeNodes.add(new TreeNode("12", "11"));
+			
+//		treeNodes.add(new TreeNode("2", "root"));
+//		treeNodes.add(new TreeNode("3", "root"));
+//		treeNodes.add(new TreeNode("5", "2"));
+//		treeNodes.add(new TreeNode("4", "2"));
+//		treeNodes.add(new TreeNode("7", "5"));
+//		treeNodes.add(new TreeNode("9", "7"));
+//		treeNodes.add(new TreeNode("11", "3"));
+//		treeNodes.add(new TreeNode("12", "11"));
 
 			
 			ManyNodeTree tree = new ManyNodeTree();
