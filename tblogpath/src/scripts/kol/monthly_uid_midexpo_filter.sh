@@ -27,21 +27,21 @@ select a.uid, mid, level from
     on a.uid = b.uid ;
 "
 
-#echo $exec_hql
-#hive -e "$exec_hql"
+echo $exec_hql
+hive -e "$exec_hql"
 
 exec_hql="
 insert overwrite table kol_tmp_expo partition(mt='$lastmonth')
-select uid, level, sum(expo_cnt) as expo_cnt from 
-    (select y.uid, level, expo_cnt from 
-        (select mid, appid , sum(expo_cnt ) as expo_cnt from mds_tblog_expo_day where dt>=$first_day_lastmonth and dt<=$last_day_lastmonth and interface_id <>'253' group by mid, appid ) x 
+select uid, level, sum(expo_cnt) as expo_cnt_sum from kol_tmp_uid_mid t1
+    join
+    (select /*+ mapjoin(s1)*/ mid, expo_cnt 
+    from 
+        (select appid from ods_dim_appkey where dt=$last_day_lastmonth and permission_mast_code='1') s1
         join 
-        kol_tmp_uid_mid y 
-        on x.mid = y.mid 
-        join 
-        (select appid from ods_dim_appkey where dt=$last_day_lastmonth and permission_mast_code='1') z 
-            on x.appid = z.appid
-) t group by uid, level having expo_cnt > 100000 ;
+        (select mid, appid , sum(expo_cnt ) as expo_cnt from mds_tblog_expo_day where dt>=$first_day_lastmonth and dt<=$last_day_lastmonth and interface_id <>'253' group by mid,appid) s2
+        on s1.appid = s2.appid 
+    ) t2 
+    on t1.mid = t2.mid group by uid, level having expo_cnt_sum > 100000 ;
 "
 echo $first_day_lastmonth
 echo $last_day_lastmonth
