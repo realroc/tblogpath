@@ -16,40 +16,6 @@ public class TblogTreeTest {
 	
 	private final String LINE_SEPERATE_TAB = "\\|";
 	private final String LINE_SEPERATE_HIVE = "\001";
-//	public static void main(String[] args) {
-//
-//		TblogTreeNode rootNode = new TblogTreeNode(null, "3882920303634394");
-//
-//		System.out.println(System.currentTimeMillis());
-//
-//		int i = 0;
-//		try {
-//			FileReader fr = new FileReader(new File("C:\\Users\\zengpeng\\Downloads\\rootmid_3882920303634394"));
-//			BufferedReader br = new BufferedReader(fr);
-//			String line = null;
-//
-//			while ((line = br.readLine()) != null) {
-//				String[] wblog = line.split("\001");
-//				// System.out.println(line + "----" + wblog[1] + "|" +
-//				// wblog[2]);
-//				rootNode.addToTreeNode(new TblogTreeNode(wblog[1], wblog[2]));
-//				// System.out.println(System.currentTimeMillis());
-//				i++;
-//				if (i % 10000 == 0)
-//					System.out.println(i);
-//			}
-//			fr.close();
-//
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		System.out.println(System.currentTimeMillis());
-//
-//		rootNode.generatePath(rootNode);
-//	}
 	
 	public static void main(String[] args) {
 		
@@ -63,12 +29,6 @@ public class TblogTreeTest {
 		System.out.println(rootNode.getLevel());
 		System.out.println(System.currentTimeMillis());
 	}
-	
-	
-//	public void genTree(String parentMid, HashMap<String, ArrayList<String>> midMap, TblogTreeNode treeNode){
-//		TblogTreeNode rootNode = new TblogTreeNode(null, rootMid);
-//		addToParentNode("3882359008955070", midMap, rootNode);
-//	}
 	
 	
 	public void addToParentNode(String parentMid, HashMap<String, ArrayList<String>> midMap, TblogTreeNode parentNode){
