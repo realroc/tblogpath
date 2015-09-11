@@ -48,12 +48,12 @@ insert overwrite table kol_tmp_expo partition(mt='$lastmonth')
 select uid, level, sum(expo_cnt) as expo_cnt_sum from 
     (select uid, level, mid from kol_tmp_uid_mid group by uid, level, mid) t1
     join
-    (select /*+ mapjoin(s1)*/ mid, expo_cnt 
+    (select /*+ mapjoin(s1)*/ mid, sum(expo_cnt) 
     from 
         (select appid from ods_dim_appkey where dt=$last_day_lastmonth and permission_mast_code='1') s1
         join 
-        (select mid, appid, sum(expo_cnt) as expo_cnt from mds_tblog_expo_day where dt>=$first_day_lastmonth and dt<=$last_day_lastmonth and interface_id <>'253' group by appid, mid) s2
-        on s1.appid = s2.appid 
+        (select mid, appid, expo_cnt from mds_tblog_expo_day where dt>=$first_day_lastmonth and dt<=$last_day_lastmonth and interface_id <>'253') s2
+        on s1.appid = s2.appid group by mid
     ) t2 
     on t1.mid = t2.mid group by uid, level having expo_cnt_sum > 100000 ;
 "
