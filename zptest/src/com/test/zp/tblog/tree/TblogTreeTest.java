@@ -19,14 +19,14 @@ public class TblogTreeTest {
 	
 	public static void main(String[] args) {
 		
-		String rootmid = "3882920303634394";
+		String rootmid = "3883309794739730";
 		TblogTreeTest t = new TblogTreeTest();
 		TblogTreeNode rootNode = new TblogTreeNode(null, rootmid);
 		System.out.println(System.currentTimeMillis());
 		t.addToParentNode(rootmid, t.getFromFile(), rootNode);
 		System.out.println(System.currentTimeMillis());
-//		t.generatePath(rootNode);
-		System.out.println(rootNode.getLevel());
+		t.generatePath(rootNode);
+		System.out.println(rootNode.getChildCount());
 		System.out.println(System.currentTimeMillis());
 	}
 	
@@ -48,7 +48,7 @@ public class TblogTreeTest {
 		
 		HashMap<String, ArrayList<String>> midMap = new HashMap<>();
 		try {
-			FileReader fr = new FileReader(new File("C:\\Users\\zengpeng\\Downloads\\rootmid_3882920303634394")) ;
+			FileReader fr = new FileReader(new File("C:\\Users\\zengpeng\\Downloads\\rootmid_3883309794739730.txt")) ;
 			BufferedReader br = new BufferedReader(fr);
 			String line = null ;
 
@@ -63,6 +63,7 @@ public class TblogTreeTest {
 					midMap.put(wblog[1], l);
 				}
 			}
+			System.out.println("size:" + midMap.size());
 			fr.close();
 			
 		} catch (FileNotFoundException e) {
@@ -86,7 +87,7 @@ public class TblogTreeTest {
 		
 		BufferedWriter bw;
 		try {
-			bw = new BufferedWriter(new FileWriter(new File("C:\\Users\\zengpeng\\Downloads\\out")));
+			bw = new BufferedWriter(new FileWriter(new File("C:\\Users\\zengpeng\\Downloads\\out3883309794739730")));
 			
 			while(leaf != null){
 				StringBuffer sb = new StringBuffer();

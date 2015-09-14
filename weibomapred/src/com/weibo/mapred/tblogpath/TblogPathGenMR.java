@@ -7,14 +7,16 @@ import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.util.GenericOptionsParser;;;
+import org.apache.hadoop.util.GenericOptionsParser;
+
+import com.hadoop.compression.lzo.LzopCodec;;;
 
 /**
  * 博文传播路径生成
@@ -25,14 +27,9 @@ public class TblogPathGenMR {
 
 	public static class RootMidMapper extends Mapper<Object, Text, Text, Text> {
 
-		private Text rootMid = new Text();
-		private Text midPair = new Text();
-
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String[] mids = value.toString().split("\001");
-			rootMid.set(mids[0]);
-			midPair.set(mids[1] + "\t" + mids[2]);
-			context.write(rootMid, midPair);
+			context.write(new Text(mids[0]), value);
 		}
 	}
 
@@ -46,31 +43,42 @@ public class TblogPathGenMR {
 			
 			for(Text midPair:values){
 				if(midPair == null) continue ;
-				String[] mids = midPair.toString().split("\t");
-//context.write(new Text("test" + mids[0] + "|" + mids[1] + "|" + mids.length), midPair);				
-				if(mids == null || mids.length != 2) continue ;
-				if(midMap.containsKey(mids[0])){
-					midMap.get(mids[0]).add(mids[1]);
+				String[] mids = midPair.toString().split("\001");
+//context.write(key, midPair);				
+		
+				if(mids == null || mids.length != 3) continue ;
+				
+				if(mids == null || mids.length != 3){
+					context.write(key, midPair);	
+					context.write(key, new Text(midPair + "|arraylength0"));
+					continue;
+				}
+				
+//context.write(new Text("test" + mids[1] + "|" + mids[2] + "|" + mids.length), midPair);						
+				if(midMap.containsKey(mids[1])){
+					midMap.get(mids[1]).add(mids[2]);
 				} else{
 					ArrayList<String> al = new ArrayList<String>();
-					al.add(mids[1]);
-					midMap.put(mids[0], al);
+					al.add(mids[2]);
+					midMap.put(mids[1], al);
 				}
 			}
 			
 			String rootmid = key.toString();
-			TblogTreeNode rootNode = new TblogTreeNode(null, rootmid);
+			TblogTreeNode rootNode = new TblogTreeNode(rootmid, rootmid);
+//context.write(key, new Text(midMap.size() + "test" + String.valueOf(rootNode.getChildCount())));			
 			addToParentNode(rootmid, midMap, rootNode);
-			
+//context.write(key, new Text(String.valueOf(rootNode.getChildCount())));		
 			Enumeration<TblogTreeNode> nodeEnum = rootNode.breadthFirstEnumeration();
 			
 			while(nodeEnum.hasMoreElements()){
 				TblogTreeNode node = nodeEnum.nextElement();
 				StringBuffer sb = new StringBuffer();
 				sb.append(node.getMid()).append("\t").append(node.getParentMid()).append("\t").append(node.getChildCount())
-				.append("\t").append(node.getLevel());
-//				context.write(key, new Text(sb.toString()));
+.append("\t").append(node.getLevel());
+				context.write(key, new Text(sb.toString()));
 			}
+			
 			
 		}
 		
@@ -100,10 +108,18 @@ public class TblogPathGenMR {
 			System.err.println("Usage: tblogpath <in> <out>");
 			System.exit(2);
 		}
+		
+	    conf.setClass("mapred.output.compression.codec", LzopCodec.class, CompressionCodec.class);
+	    conf.set("mapreduce.job.reduces", "100");
+//	    conf.set("mapreduce.reduce.java.opts", "-Xmx2048m");
+	    conf.setBoolean("mapred.output.compress", false);
+	    conf.set("mapred.output.compression.type", "BLOCK");
+	    conf.set("mapred.min.split.size", "512000000");
+
+	    
 		Job job = Job.getInstance(conf, "tblogpath");
 		job.setJarByClass(TblogPathGenMR.class);
 		job.setMapperClass(RootMidMapper.class);
-		job.setCombinerClass(TreeInfoReducer.class);
 		job.setReducerClass(TreeInfoReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
