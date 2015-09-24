@@ -124,15 +124,14 @@ hive -e "$exec_hql"
 
 ##计算最终得分
 exec_hql="
-drop table if exists kol_influence_result;
-create table kol_influence_result as
+insert overwrite table kol_influence_result 
 select uid, level, nick, expo_count*0.6 + hudong_count*0.2 + fans_count*0.2 as score
 from(
 select uid, level, nick, (log10_expo - min_log10_expo)/(max_log10_expo - min_log10_expo) * 1000 as expo_count, 
-                   (log10_hudong - min_log10_hudong)/(max_log10_hudong - min_log10_hudong) * 1000 as hudong_count,
-                   case when filtered_fans_rate * 1000 < 500 then 0
-                   else ((log10_filtered_fans - min_log10_filtered_fans)/(max_log10_filtered_fans - min_log10_filtered_fans) * 1000 + filtered_fans_rate * 1000)/2
-                   end as fans_count
+       (log10_hudong - min_log10_hudong)/(max_log10_hudong - min_log10_hudong) * 1000 as hudong_count,
+       case when filtered_fans_rate * 1000 < 500 then 0
+       else ((log10_filtered_fans - min_log10_filtered_fans)/(max_log10_filtered_fans - min_log10_filtered_fans) * 1000 + filtered_fans_rate * 1000)/2
+       end as fans_count
 from kol_influence_result_prepare a
 join
 (select '$dt' as dt, max(log10_expo) as max_log10_expo, min(log10_expo) as min_log10_expo, max(log10_hudong) as max_log10_hudong, min(log10_hudong) as min_log10_hudong,
