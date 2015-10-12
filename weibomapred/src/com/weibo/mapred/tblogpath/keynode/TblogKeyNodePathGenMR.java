@@ -36,31 +36,31 @@ public class TblogKeyNodePathGenMR {
 
 	public static class TreeInfoReducer extends Reducer<Text, Text, Text, Text> {
 		
-		HashMap<String, ArrayList<TblogTreeNode>> midMap = new HashMap<String, ArrayList<TblogTreeNode>>();
+		HashMap<String, ArrayList<TblogTreeNode>> midNodesMap = new HashMap<String, ArrayList<TblogTreeNode>>();
 		
 		@Override
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			
 			Double keyNodeRate = Double.parseDouble(context.getConfiguration().get("keyNodeRate"));
-			
 			TblogTreeNode rootNode = null;
+			
 			for(Text midPair:values){
 				if(midPair == null) continue ;
 				String[] mids = midPair.toString().split("\001");
 				if(mids == null || mids.length != 9) continue ;				
 				TblogTreeNode tnode = new TblogTreeNode(mids[0], mids[1], mids[2], mids[3], mids[4], mids[5], mids[6],mids[7],mids[8]);
 				if("0".equals(tnode.getParent_mid())) rootNode = tnode;
-				if(midMap.containsKey(mids[1])){
-					midMap.get(mids[1]).add(tnode);
+				if(midNodesMap.containsKey(mids[1])){
+					midNodesMap.get(mids[1]).add(tnode);
 				} else{
 					ArrayList<TblogTreeNode> al = new ArrayList<TblogTreeNode>();
 					al.add(tnode);
-					midMap.put(mids[1], al);
+					midNodesMap.put(mids[1], al);
 				}
 			}
 			
 			String rootmid = key.toString();
-			addToParentNode(rootmid, midMap, rootNode);
+			addToParentNode(rootmid, midNodesMap, rootNode);
 			Enumeration<TblogTreeNode> nodeEnum = rootNode.breadthFirstEnumeration();
 			//保存已经输出node,避免重复输出
 			ArrayList<String> writenMidList = new ArrayList<String>();
@@ -83,18 +83,18 @@ public class TblogKeyNodePathGenMR {
 		}
 
 		/**
-		 * build path tree
+		 * Build Multi-Tree
 		 * @param parentMid
-		 * @param midMap
+		 * @param midNodesMap key:mid value:nodes
 		 * @param parentNode
 		 */
-		public void addToParentNode(String parentMid, HashMap<String, ArrayList<TblogTreeNode>> midMap, TblogTreeNode parentNode){
-			if(parentMid == null || parentNode == null || midMap == null) return ;
-			ArrayList<TblogTreeNode> midList = midMap.get(parentMid);
-			if(midList == null || midList.size() == 0) return ;
-			for(TblogTreeNode node: midList){
+		public void addToParentNode(String parentMid, HashMap<String, ArrayList<TblogTreeNode>> midNodesMap, TblogTreeNode parentNode){
+			if(parentMid == null || parentNode == null || midNodesMap == null) return ;
+			ArrayList<TblogTreeNode> nodeList = midNodesMap.get(parentMid);
+			if(nodeList == null || nodeList.size() == 0) return ;
+			for(TblogTreeNode node: nodeList){
 				parentNode.add(node);
-				addToParentNode(node.getMid(), midMap, node);
+				addToParentNode(node.getMid(), midNodesMap, node);
 			}
 		}
 	}
