@@ -36,49 +36,46 @@ public class TblogKeyNodePathGenMR {
 
 	public static class TreeInfoReducer extends Reducer<Text, Text, Text, Text> {
 		
-		HashMap<String, ArrayList<NodeInfo>> midMap = new HashMap<String, ArrayList<NodeInfo>>();
+		HashMap<String, ArrayList<TblogTreeNode>> midMap = new HashMap<String, ArrayList<TblogTreeNode>>();
 		
 		@Override
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			
 			Double keyNodeRate = Double.parseDouble(context.getConfiguration().get("keyNodeRate"));
 			
-			NodeInfo rootNodeInf = null;
+			TblogTreeNode rootNode = null;
 			for(Text midPair:values){
 				if(midPair == null) continue ;
 				String[] mids = midPair.toString().split("\001");
 				if(mids == null || mids.length != 9) continue ;				
-				NodeInfo nodeInfo = new NodeInfo(mids[0], mids[1], mids[2], mids[3], mids[4], mids[5], mids[6],mids[7],mids[8]);
-				if("0".equals(nodeInfo.getParentmid())) rootNodeInf = nodeInfo;
+				TblogTreeNode tnode = new TblogTreeNode(mids[0], mids[1], mids[2], mids[3], mids[4], mids[5], mids[6],mids[7],mids[8]);
+				if("0".equals(tnode.getParent_mid())) rootNode = tnode;
 				if(midMap.containsKey(mids[1])){
-					midMap.get(mids[1]).add(nodeInfo);
+					midMap.get(mids[1]).add(tnode);
 				} else{
-					ArrayList<NodeInfo> al = new ArrayList<NodeInfo>();
-					al.add(nodeInfo);
+					ArrayList<TblogTreeNode> al = new ArrayList<TblogTreeNode>();
+					al.add(tnode);
 					midMap.put(mids[1], al);
 				}
 			}
 			
 			String rootmid = key.toString();
-			TblogTreeNode rootNode = new TblogTreeNode(rootmid, rootNodeInf);
 			addToParentNode(rootmid, midMap, rootNode);
 			Enumeration<TblogTreeNode> nodeEnum = rootNode.breadthFirstEnumeration();
 			//保存已经输出node,避免重复输出
 			ArrayList<String> writenMidList = new ArrayList<String>();
 			while(nodeEnum.hasMoreElements()){
 				TblogTreeNode node = nodeEnum.nextElement();
-				NodeInfo n = node.getNodeInf();
-				if(Double.parseDouble(n.getContribute()) >= keyNodeRate && ("1".equals(n.getLevel()) || "2".equals(n.getLevel()) )){
+				if(Double.parseDouble(node.getContribute()) >= keyNodeRate && ("1".equals(node.getUser_level())) || "2".equals(node.getUser_level())){
 					for(TreeNode tnode : node.getPath()){
 						TblogTreeNode tn = (TblogTreeNode) tnode;
-						if(!writenMidList.contains(tn.getNodeInf().getMid())){
+						if(!writenMidList.contains(tn.getMid())){
 							StringBuffer sb = new StringBuffer();
-							NodeInfo tempNode = tn.getNodeInf();
-							sb.append(tempNode.getMid()).append("\t").append(tempNode.getUid()).append("\t").append(tempNode.getTime()).append("\t");
-							sb.append(tempNode.getParentmid()).append("\t").append(tempNode.getRootmid()).append("\t").append(tn.getChildCount()).append("\t");
-							sb.append(tn.getLevel()).append("\t").append(tempNode.getTrand_cnt()).append("\t").append(tempNode.getContribute()).append("\t").append(tempNode.getLevel());
+							sb.append(tn.getMid()).append("\t").append(tn.getUid()).append("\t").append(tn.getTime()).append("\t");
+							sb.append(tn.getParent_mid()).append("\t").append(tn.getRoot_mid()).append("\t").append(tn.getChildCount()).append("\t");
+							sb.append(tn.getLevel()).append("\t").append(tn.getTrand_cnt()).append("\t").append(tn.getContribute()).append("\t").append(tn.getUser_level());
 							context.write(null, new Text(sb.toString()));
-							writenMidList.add(tn.getNodeInf().getMid());
+							writenMidList.add(tn.getMid());
 						}
 					}
 				}
@@ -91,14 +88,13 @@ public class TblogKeyNodePathGenMR {
 		 * @param midMap
 		 * @param parentNode
 		 */
-		public void addToParentNode(String parentMid, HashMap<String, ArrayList<NodeInfo>> midMap, TblogTreeNode parentNode){
+		public void addToParentNode(String parentMid, HashMap<String, ArrayList<TblogTreeNode>> midMap, TblogTreeNode parentNode){
 			if(parentMid == null || parentNode == null || midMap == null) return ;
-			ArrayList<NodeInfo> midList = midMap.get(parentMid);
+			ArrayList<TblogTreeNode> midList = midMap.get(parentMid);
 			if(midList == null || midList.size() == 0) return ;
-			for(NodeInfo mid: midList){
-				TblogTreeNode node = new TblogTreeNode(parentMid, mid);
+			for(TblogTreeNode node: midList){
 				parentNode.add(node);
-				addToParentNode(mid.getMid(), midMap, node);
+				addToParentNode(node.getMid(), midMap, node);
 			}
 		}
 	}
