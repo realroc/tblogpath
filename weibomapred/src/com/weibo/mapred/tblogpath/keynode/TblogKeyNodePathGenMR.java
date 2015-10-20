@@ -66,7 +66,7 @@ public class TblogKeyNodePathGenMR {
 			ArrayList<String> writenMidList = new ArrayList<String>();
 			while(nodeEnum.hasMoreElements()){
 				TblogTreeNode node = nodeEnum.nextElement();
-				if(Double.parseDouble(node.getContribute()) >= keyNodeRate && ("1".equals(node.getUser_level())) || "2".equals(node.getUser_level())){
+				if(Double.parseDouble(node.getContribute()) >= keyNodeRate && ("1".equals(node.getUser_level()) || "2".equals(node.getUser_level()))){
 					for(TreeNode tnode : node.getPath()){
 						TblogTreeNode tn = (TblogTreeNode) tnode;
 						if(!writenMidList.contains(tn.getMid())){
@@ -100,6 +100,7 @@ public class TblogKeyNodePathGenMR {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 3) {
