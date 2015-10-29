@@ -37,35 +37,30 @@ hive -e "$exec_hql"
 exec_hql="
 drop table if exists kol_influence_uid_hudong;
 create table kol_influence_uid_hudong as
-select x.uid, if(hudong_num is null or hudong_num ='',0,hudong_num) as hudong_num from
- kol_influence_uid x
- left outer join
+select x.uid ,
+if(hudong_num is null or hudong_num ='',0,hudong_num) as hudong_num 
+ from 
+kol_influence_uid x 
+  left outer join 
  (
-select  a.uid,count(1) as hudong_num ,
-        sum(case when tag='tran' then 1 else 0 end) as tran ,
-        sum(case when tag='cmt' then 1 else 0 end) as cmt,
-        sum(case when tag='zan' then 1 else 0 end) as zan  from
-        (
-         select /*+ mapjoin(s1)*/ s1.uid, mid from kol_influence_uid s1
-                join
-         (select uid, mid from mds_bhv_pubblog where dt>=$first_day_sixmonth and dt<=$last_day_lastmonth) s2
-         on s1.uid = s2.uid) a
-        join
-        (
-        select mid,uid as cuid ,'tran' as tag from mds_bhv_pubblog where dt>=$first_day_sixmonth and dt<=$last_day_lastmonth and is_transmit='1'
-        union all
-        select  mid,uid as cuid,'cmt' as tag from mds_bhv_cmtblog where dt>=$first_day_sixmonth and dt<=$last_day_lastmonth
-        union all
-        select object_id as mid , uid as cuid ,'zan' as tag  from mds_bhv_like where dt>=$first_day_sixmonth and dt<=$last_day_lastmonth and status='1' and mode='1'
-        ) b
-on a.mid=b.mid
+	select a.uid,sum(traned_cnt_total+cmted_cnt + liked_cnt )  as hudong_num ,sum(traned_cnt_total) as tran , 
+	sum(cmted_cnt) as cmt,
+	sum(liked_cnt) as zan  from 
+		(select /*+ mapjoin(s1)*/ s1.uid, mid from kol_influence_uid s1
+						join
+				 (select uid, mid from mds_bhv_pubblog where dt>=$first_day_sixmonth and dt<=$last_day_lastmonth) s2
+				 on s1.uid = s2.uid) a 
+		join 
+		(
+		s  elect mid , traned_cnt_total, cmted_cnt , liked_cnt from mds_tblog_bhv_day where dt>=$first_day_sixmonth and dt<=$last_day_lastmonth 
+		) b
+	on a.mid=b.mid 
 group by uid ) y
 on x.uid=y.uid ;
 "
 
 echo "$exec_hql"
 hive -e "$exec_hql"
-
 
 
 

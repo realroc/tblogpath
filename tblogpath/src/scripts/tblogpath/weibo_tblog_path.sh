@@ -88,3 +88,83 @@ select /*+ mapjoin(a)*/ c.mid, c.uid, c.pubtime, c.father_mid, c.root_mid, c.chi
 "
 echo "$exec_hql"
 hive -e "$exec_hql"
+
+
+
+##查询原创博文七天内传播量
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exec_hql="
+select /*+ mapjoin(a)*/ a.mid, dt, (unix_timestamp('$dt','yyyy-MM-dd') - unix_timestamp('$before_dt_7days','yyyy-MM-dd'))/(60*60*24) as days, traned_cnt_total from
+(select mid from tblog_path_mids_info where dt=$before_dt_7days and layer=0) a
+join
+(select mid, dt, traned_cnt_total from mds_tblog_bhv_day where dt>='$before_dt_7days' and dt<'$dt' and is_transmit='0' ) b 
+on a.mid = b.mid ;
+"
+echo "$exec_hql"
+hive -e "$exec_hql"
+
+
+
+
+
+
+
+
+
+	   
+
+
+select mid,
+        dt,
+        sum(if(days < 1,traned_cnt_total,0)),
+        sum(if(days < 2,traned_cnt_total,0)),
+        sum(if(days < 3,traned_cnt_total,0)),
+        sum(if(days < 4,traned_cnt_total,0)),
+        sum(if(days < 5,traned_cnt_total,0)),
+        sum(if(days < 6,traned_cnt_total,0)),
+        sum(if(days < 7,traned_cnt_total,0))
+        from
+(
+select /*+ mapjoin(a)*/ a.mid, a.dt, (unix_timestamp(b.dt,'yyyyMMdd') - unix_timestamp('','yyyyMMdd'))/(60*60*24) as days, traned_cnt_total from
+(select mid, dt from tblog_path_mids_info where dt='' and layer=0) a
+join
+(select mid, dt, traned_cnt_total from mds_tblog_bhv_day where dt>='' and dt<'') b
+on a.mid = b.mid
+)c group by mid, dt limit 200;
+
+
+
+
+
+3896549186501015
+
+
+
+
+
+
+SELECT (unix_timestamp('2010-09-11','yyyy-MM-dd') - unix_timestamp('2010-09-12','yyyy-MM-dd'))/(60*60*24) from search_tmp_cheat_user LIMIT 1;
+
+
+SELECT datediff('2010-09-11', '2010-09-22') FROM search_tmp_cheat_user LIMIT 1;
+
+
+##unix_timestamp() returns an int: current time in seconds since epoch
+##from_unixtime(,'yyyy-MM-dd') converts to a string of the given format, e.g. '2012-12-28'
+##date_sub(,180) subtracts 180 days from that string, and returns a new string in the same format.
+##unix_timestamp(,'yyyy-MM-dd') converts that string back to an int
+
