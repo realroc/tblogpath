@@ -11,63 +11,49 @@ import java.util.Iterator;
 
 public class NIOServer{
 	
-	Selector selector = null;
-	ServerSocketChannel ssc ;
+	ServerSocketChannel ssc;
+	Selector selector;
+	SocketChannel sc;
 	
-	
-	public void initServer(){
-		
-		try {
-			selector = Selector.open();
-			ssc = ServerSocketChannel.open();
-			ssc.configureBlocking(false);
-			ssc.bind(new InetSocketAddress("localhost", 1111));
-			ssc.register(selector, SelectionKey.OP_ACCEPT);
-			handle();
-		} catch (IOException e){ 
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws IOException {
+		new NIOServer().init();
 	}
 	
-	public void handle() throws IOException{
+	public void init() throws IOException{
+		selector = Selector.open();
+		ssc = ServerSocketChannel.open();
+		ssc.bind(new InetSocketAddress("localhost", 1111));
+		ssc.configureBlocking(false);
+		ssc.register(selector, SelectionKey.OP_ACCEPT);
 		
-		SocketChannel sc ;
 		while(true){
-			System.out.println("tet1");				
-			selector.select(0);
+			selector.select();
 			Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 			
 			while(it.hasNext()){
 				SelectionKey key = it.next();
 				it.remove();
-System.out.println("tet2");				
+				
 				if(key.isAcceptable()){
-					ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
 					sc = ssc.accept();
 					sc.configureBlocking(false);
 					sc.register(selector, SelectionKey.OP_READ);
-				} else if(key.isReadable()){
+				}else if(key.isReadable()){
 					sc = (SocketChannel) key.channel();
-					ByteBuffer bbuf = ByteBuffer.allocate(1024);
-					bbuf.clear();
-					int t = sc.read(bbuf);
-					System.out.println(new String(bbuf.array(), 0, t));
+					ByteBuffer bb = ByteBuffer.allocate(1024);
+					bb.clear();
+					int i = sc.read(bb);
+					System.out.println(new String(bb.array(),0, i));
 					sc.register(selector, SelectionKey.OP_WRITE);
-				} else if(key.isWritable()){
+				}else if(key.isWritable()){
 					sc = (SocketChannel) key.channel();
-					ByteBuffer bbuf = ByteBuffer.allocate(1024);
-					bbuf.put("hello hello".getBytes());
-					bbuf.flip();
-					sc.write(bbuf);
+					ByteBuffer bb = ByteBuffer.allocate(1024);
+					bb.put("from server".getBytes());
+					bb.flip();
+					sc.write(bb);
 					sc.register(selector, SelectionKey.OP_READ);
 				}
 			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		NIOServer ns = new NIOServer();
-		ns.initServer();
 	}
 }

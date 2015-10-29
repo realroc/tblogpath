@@ -70,11 +70,8 @@ public class TblogTreeNode extends DefaultMutableTreeNode{
 			while(leaf != null){
 				StringBuffer sb = new StringBuffer();
 				for(TreeNode ub: leaf.getPath()){
-					
 					TblogTreeNode d = (TblogTreeNode) ub;
-
 					sb.append(d.getMid()).append("->");
-					
 				}
 				
 				bw.write(sb.toString());

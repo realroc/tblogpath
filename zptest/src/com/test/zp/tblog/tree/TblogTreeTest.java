@@ -14,7 +14,7 @@ import javax.swing.tree.TreeNode;
 
 public class TblogTreeTest {
 	
-	private final String LINE_SEPERATE_TAB = "\\|";
+//	private final String LINE_SEPERATE_TAB = "\\|";
 	private final String LINE_SEPERATE_HIVE = "\001";
 	
 	public static void main(String[] args) {
@@ -111,6 +111,4 @@ public class TblogTreeTest {
 			e1.printStackTrace();
 		}
 	}
-	
-	
 }
