@@ -26,13 +26,9 @@ public class ZooTest {
 //			zk.setData("/testRootPath", "just 2 just for test".getBytes(), -1);
 			
 			System.out.println(new String(zk.getData("/testRootPath", null, new Stat())) );
-			
+			zk.close();
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 }
-
-
-
-

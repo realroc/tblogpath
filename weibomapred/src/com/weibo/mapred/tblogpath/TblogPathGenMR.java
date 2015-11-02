@@ -65,8 +65,6 @@ public class TblogPathGenMR {
 				sb.append(node.getMid()).append("\t").append(node.getParentMid()).append("\t").append(node.getChildCount()).append("\t").append(node.getLevel());
 				context.write(key, new Text(sb.toString()));
 			}
-			
-			
 		}
 		
 		/**
@@ -84,7 +82,6 @@ public class TblogPathGenMR {
 				parentNode.add(node);
 				addToParentNode(mid, midMap, node);
 			}
-			
 		}
 	}
 
@@ -103,7 +100,6 @@ public class TblogPathGenMR {
 	    conf.set("mapred.output.compression.type", "BLOCK");
 	    conf.set("mapred.min.split.size", "512000000");
 
-	    
 		Job job = Job.getInstance(conf, "tblogpath");
 		job.setJarByClass(TblogPathGenMR.class);
 		job.setMapperClass(RootMidMapper.class);

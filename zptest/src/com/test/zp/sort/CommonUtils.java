@@ -8,13 +8,10 @@ public class CommonUtils {
 	 * @return
 	 */
 	public static int[] generateArray(int length){
-		
 		int[] a = new int[length];
-		
 		for(int i=0; i<length; i++){
 			a[i] = (int) (100*Math.random());
 		}
-		
 		return a;
 	}
 	
@@ -31,13 +28,13 @@ public class CommonUtils {
 	}
 	
 	/**
-	 * print elements of array
+	 * Print Elements of Array
 	 * @param a
 	 */
 	public static void printArrays(int[] a){
 		StringBuffer sb = new StringBuffer();
 		for(int i=0; i<a.length; i++){
-			sb.append(a[i]).append("  ");
+			sb.append(a[i]).append(",");
 		}
 		System.out.println(sb.toString());
 	}
