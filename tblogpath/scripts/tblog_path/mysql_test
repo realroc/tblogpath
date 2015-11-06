@@ -1,0 +1,46 @@
+
+insert overwrite local directory '/tmp/tblog_path_mids_traned' select * from tblog_path_mids_traned where dt=20151011 ;
+
+CREATE TABLE `tblog_path_mids_traned` (
+  `mid` BIGINT NOT NULL,
+  `traned_cnt_total_day1` BIGINT,
+  `traned_cnt_total_day2` BIGINT,
+  `traned_cnt_total_day3` BIGINT,
+  `traned_cnt_total_day4` BIGINT,
+  `traned_cnt_total_day5` BIGINT,
+  `traned_cnt_total_day6` BIGINT,
+  `traned_cnt_total_day7` BIGINT,
+  `pub_date` date,
+  PRIMARY KEY (`mid`)
+) DEFAULT CHARSET=utf8;
+
+
+insert into mysql.user(Host,User,Password) values('localhost','localhost',password('tblog'));
+flush privileges;
+
+LOAD DATA INFILE 'tblog_path_mids_traned.txt' INTO TABLE tblog_path.tblog_path_mids_traned
+FIELDS TERMINATED BY ',' 
+LINES TERMINATED BY '\n';
+
+
+
+
+insert overwrite local DIRECTORY '/tmp/tblog_path_mids_info' select * from tblog_path_mids_info where dt = '20151011';
+
+CREATE  TABLE `tblog_path_mids_info`(
+  `mid` bigint, 
+  `uid` bigint, 
+  `pubtime` datetime, 
+  `father_mid` bigint, 
+  `root_mid` bigint, 
+  `children_cnt` int, 
+  `layer` int, 
+  `trans_cnt` bigint, 
+  `contribution` double, 
+  `user_level` smallint, 
+  `score` double,
+  `dt` date)
+  
+LOAD DATA INFILE 'tblog_path_mids_info' INTO TABLE tblog_path.tblog_path_mids_info
+FIELDS TERMINATED BY ',' 
+LINES TERMINATED BY '\n';

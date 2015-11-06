@@ -90,21 +90,7 @@ echo "$exec_hql"
 hive -e "$exec_hql"
 
 
-
 ##查询原创博文七天内传播量
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 exec_hql="
@@ -117,15 +103,6 @@ on a.mid = b.mid ;
 echo "$exec_hql"
 hive -e "$exec_hql"
 
-
-
-
-
-
-
-
-
-	   
 
 
 select mid,
@@ -168,3 +145,11 @@ SELECT datediff('2010-09-11', '2010-09-22') FROM search_tmp_cheat_user LIMIT 1;
 ##date_sub(,180) subtracts 180 days from that string, and returns a new string in the same format.
 ##unix_timestamp(,'yyyy-MM-dd') converts that string back to an int
 
+
+
+hadoop fs -test -e /user/wb_wls_data/warehouse/kol_influence_result/mt=201510
+if [ $? -ne 0 ]; then
+    echo "Directory not exists!"
+else
+	echo "Directory exists!"
+fi

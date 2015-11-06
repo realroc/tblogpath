@@ -81,6 +81,9 @@ CREATE  TABLE `kol_influence_result`(
   `expo_count` double, 
   `hudong_count` double, 
   `fans_count` double, 
+  `lastmonth_expo` bigint, 
+  `lastmonth_original_num` bigint, 
+  `lastmonth_traned_num` bigint, 
   `score` double)
 PARTITIONED BY (mt string)  
 STORED AS RCFILE

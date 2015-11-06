@@ -97,3 +97,5 @@ grant select on table true_active_user_result to user renhan;
 grant select on table true_active_user_result to user jinqiang;
 grant select on table true_active_user_result to user chengang6;
 grant select on table true_active_user_result to user zhaonan5;
+grant select on table true_active_user_result to user chaoying;
+
