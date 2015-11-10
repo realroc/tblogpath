@@ -11,8 +11,9 @@ LOCATION 'hdfs://ns1/user/wb_wls_data/warehouse/kol_tmp_expo';
 CREATE  TABLE `kol_tmp_uid_mid`(
   `uid` string, 
   `mid` string, 
-  `level` int)
-  PARTITIONED BY (is_transmit int)
+  `level` int,
+  `is_transmit` int)
+  PARTITIONED BY (is_direct int)
 STORED AS RCFILE 
 LOCATION 'hdfs://ns1/user/wb_wls_data/warehouse/kol_tmp_uid_mid';
 

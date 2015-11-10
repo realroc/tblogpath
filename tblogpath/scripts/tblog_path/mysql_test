@@ -24,7 +24,6 @@ LINES TERMINATED BY '\n';
 
 
 
-
 insert overwrite local DIRECTORY '/tmp/tblog_path_mids_info' select * from tblog_path_mids_info where dt = '20151011';
 
 CREATE  TABLE `tblog_path_mids_info`(

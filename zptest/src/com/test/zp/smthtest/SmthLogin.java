@@ -28,7 +28,8 @@ public class SmthLogin {
 		Iterator<Element> it =doc.select(".title_9").select("a").iterator();
 		while(it.hasNext()){
 			Element e = it.next();
-			System.out.println(e + "------" + e.attr("href"));
+//			System.out.println(e + "------" + e.attr("href"));
+			System.out.println(e.text());
 		}
 	}
 
@@ -97,8 +98,8 @@ public class SmthLogin {
 			CloseableHttpResponse response2 = httpclient.execute(login);
 
 			CloseableHttpResponse response3 = httpclient.execute(
-//					RequestBuilder.get("http://www.newsmth.net/nForum/board/Stock")
-					RequestBuilder.get("http://www.newsmth.net/nForum/board/Hubei")
+					RequestBuilder.get("http://www.newsmth.net/nForum/board/Stock")
+//					RequestBuilder.get("http://www.newsmth.net/nForum/board/Hubei")
 					.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; rv:41.0) Gecko/20100101 Firefox/41.0")
 					.build());
 			
