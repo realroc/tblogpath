@@ -2,6 +2,10 @@ package com.test.zp.sort;
 
 public class CommonUtils {
 	
+	public static void main(String[] args) {
+		printArrays(generateArray(15));
+	}
+	
 	/**
 	 * initial an random array
 	 * @param length

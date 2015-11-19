@@ -9,17 +9,13 @@ public class SortTest {
 		CommonUtils.printArrays(a);
 		
 //		quickSort(a, 0, a.length-1);
-//		CommonUtils.printArrays(a);
-		
 		
 //		bubbleSort(a);
-//		CommonUtils.printArrays(a);
 		
-		insertSort(a);
+//		insertSort(a);
+
+		selectSort(a);
 		CommonUtils.printArrays(a);
-		
-//		selectSort(a);
-//		CommonUtils.printArrays(a);
 		
 	}
 
@@ -30,23 +26,18 @@ public class SortTest {
 	 * @return
 	 */
 	public static void quickSort(int[] a, int begin, int end){
-		int base = a[begin] ;
-		while(begin <= end){
-			while(begin < end && a[end] <= base){
-				end--;
-			}
-			a[begin] = a[end];
-			while(begin <= end && a[begin] > base){
-				begin++;
-			}
-			a[end] = base;
+		if(begin >= end) return ;
+		int base = a[begin];
+		int i = begin, j = end ;
+		while(i<j){
+			while(i < end && a[i] <= base) i++;
+			while(j > begin && a[j] >= base) j-- ;
+			if(i<j) CommonUtils.swap(a, i, j);
 		}
-		
-		
+		if(j != begin) CommonUtils.swap(a, begin, j);
+		quickSort(a, begin, j-1);
+		quickSort(a, j+1, end);
 	}
-	
-	
-	
 	
 	
 
@@ -56,13 +47,12 @@ public class SortTest {
 	 * @return
 	 */
 	private static void bubbleSort(int[] a) {
-		for(int i=a.length-1; i>0; i--){
-			for(int j=0; j<i; j++){
-				if(a[j] > a[j+1]) CommonUtils.swap(a, j, j+1);
+		for(int i=0; i<a.length; i++){
+			for(int j=i; j<a.length; j++){
+				if(a[i] > a[j]) CommonUtils.swap(a, i, j);
 			}
 		}
 	}
-	
 	
 	/**
 	 * InsertSort

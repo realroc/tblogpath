@@ -38,7 +38,7 @@ public class NIOClientTest {
 						sc = (SocketChannel) key.channel();
 	                    if (sc.isConnectionPending()) {  
 	                        sc.finishConnect();  
-	                        System.out.println("完成连接!");  
+	                        System.out.println("connect successfully");  
 	                        buffer.clear();  
 	                        buffer.put("Hello,Server hh".getBytes());  
 	                        buffer.flip();  

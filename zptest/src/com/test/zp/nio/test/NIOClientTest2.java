@@ -1,5 +1,6 @@
 package com.test.zp.nio.test;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -7,60 +8,71 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+import io.netty.channel.socket.nio.NioSocketChannel;
+
 public class NIOClientTest2 {
 
 	public static void main(String[] args) {
+		for(int i=0; i<200; i++){
 			new NIOClientTest2().connect();
+		}
+			
 	}
 	
 	public void connect(){
 		
-		SocketChannel sc ;
-		Selector selector ;
+		SocketChannel channel ;
+		Selector selector;
 		ByteBuffer buffer = ByteBuffer.allocate(1024);
 		
-		try{
-			sc = SocketChannel.open();
+		try {
+			channel = SocketChannel.open();
 			selector = Selector.open();
-			sc.configureBlocking(false);
-			sc.connect(new InetSocketAddress("localhost", 8888));
-			sc.register(selector, SelectionKey.OP_CONNECT);
+			channel.configureBlocking(false);
+			channel.connect(new InetSocketAddress("localhost", 8888));
+			channel.register(selector, SelectionKey.OP_CONNECT);
 			
-			for(;;){
-				selector.select();
-System.out.println("key info:");					
-				Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
-				while(keys.hasNext()){
-					SelectionKey key = keys.next();
+			while(true){
 				
+				selector.select();
+				
+				Iterator<SelectionKey> keyIt = selector.selectedKeys().iterator();
+				
+				while(keyIt.hasNext()){
+					SelectionKey key = keyIt.next();
 					if(key.isConnectable()){
-						sc = (SocketChannel) key.channel();
-						sc.finishConnect();
+						channel = (SocketChannel) key.channel();
+						channel.finishConnect();
 						buffer.clear();
-						buffer.put("Hello from client".getBytes());
+						buffer.put("test".getBytes());
 						buffer.flip();
-						sc.write(buffer);
-						sc.register(selector, SelectionKey.OP_READ);
-					} else if(key.isReadable()){
-						sc = (SocketChannel) key.channel();
+						channel.write(buffer);
+						channel.register(selector, SelectionKey.OP_READ);
+					}else if(key.isReadable()){
+						channel = (SocketChannel) key.channel();
 						buffer.clear();
-						int length = sc.read(buffer);
-						System.out.println(new String(buffer.array(), 0, length));
-						sc.register(selector, SelectionKey.OP_WRITE);
-					} else if(key.isWritable()){
-						sc = (SocketChannel) key.channel();
+						int i = channel.read(buffer);
+						System.out.println(new String(buffer.array(), 0, i));
+						channel.register(selector, SelectionKey.OP_WRITE);
+					}else if(key.isWritable()){
+						channel = (SocketChannel) key.channel();
 						buffer.clear();
-						buffer.put("Hello from client".getBytes());
+						buffer.put("Writable Key".getBytes());
 						buffer.flip();
-						sc.write(buffer);
-						sc.register(selector, SelectionKey.OP_READ);
+						channel.write(buffer);
+						channel.close();
+						return ;
+//						channel.register(selector, SelectionKey.OP_READ);
 					}
-					keys.remove();
 				}
+				
 			}
 			
-		} catch(Exception e){
 			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 	}
 }

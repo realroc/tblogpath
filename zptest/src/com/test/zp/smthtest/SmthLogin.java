@@ -2,6 +2,8 @@ package com.test.zp.smthtest;
 
 import java.net.URI;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -28,6 +30,11 @@ public class SmthLogin {
 		Iterator<Element> it =doc.select(".title_9").select("a").iterator();
 		while(it.hasNext()){
 			Element e = it.next();
+
+//			Pattern p = Pattern.compile("^\\d+$") ;
+			Pattern p = Pattern.compile("^\\d+$") ;
+			Matcher m = p.matcher(e.text());
+			if(m.find()) continue ;
 //			System.out.println(e + "------" + e.attr("href"));
 			System.out.println(e.text());
 		}

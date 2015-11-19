@@ -54,8 +54,6 @@ STORED AS RCFILE
 LOCATION 'hdfs://ns1/user/wb_wls_data/warehouse/tblog_path_mids_info';
 
 
-
-
 CREATE  TABLE `tblog_path_mids_traned`(
   `mid` string, 
   `traned_cnt_total_day1` bigint,
