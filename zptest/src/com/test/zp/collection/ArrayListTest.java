@@ -12,8 +12,8 @@ public class ArrayListTest {
 //		
 //		
 //		Collections.sort(al);
-		new ArrayListTest().heapOutOfMemory();
-//		new ArrayListTest().stackOutOfMemory();
+//		new ArrayListTest().heapOutOfMemory();
+		new ArrayListTest().stackOutOfMemory();
 
 	}
 	

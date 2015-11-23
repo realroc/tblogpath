@@ -1,4 +1,3 @@
-
 if test "$1" == "" ; then
    dt=`date +%Y%m%d`
 else
@@ -113,7 +112,7 @@ join
 on a.uid = c.uid
 join
 (select uid, filtered_fans_num, filtered_fans_rate from kol_influence_uid_funs ) d 
-on a.uid = d.uid
+on a.uid = d.uid where d.filtered_fans_num >= 1000 and (c.hudong_num >= 3000 or c.hudong_num/b.expo_num*10 >= 10)
 "
 echo "$exec_hql"
 hive -e "$exec_hql"
