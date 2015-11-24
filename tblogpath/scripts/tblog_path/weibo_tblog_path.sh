@@ -76,10 +76,14 @@ hive -e "$exec_hql"
 ##≤È—Økol–≈œ¢ 
 exec_hql="
 insert overwrite table tblog_path_mids_info partition(dt=$before_dt_7days)
-select a.mid, a.uid, a.pubtime, a.father_mid, a.root_mid, a.children_cnt, a.layer, a.trans_cnt, a.contribution, a.user_level, b.score 
+select a.mid, a.uid, c.nick, a.pubtime, a.father_mid, a.root_mid, a.children_cnt, a.layer, a.trans_cnt, a.contribution, a.user_level, b.score 
 from tblog_path_mids_tmp a 
 left join 
-(select uid, score from kol_influence_result where mt='$kol_month') b on a.uid = b.uid
+(select uid, score from kol_influence_result where mt='$kol_month') b
+on a.uid = b.uid
+left join
+(select uid, nick from mds_user_info where dt='$yestoday') c
+on a.uid = c.uid 
 "
 echo "$exec_hql"
 hive -e "$exec_hql"

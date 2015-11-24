@@ -25,8 +25,8 @@ CREATE  TABLE `tblog_path_mids_tmp`(
   `pubtime` string,
   `father_mid` string,
   `root_mid` string,
-  `children_cnt` int, 
-  `layer` int,
+  `children_cnt` string, 
+  `layer` string,
   `trans_cnt` bigint,
   `contribution` double,
   `user_level` string
@@ -39,6 +39,7 @@ LOCATION 'hdfs://ns1/user/wb_wls_data/warehouse/tblog_path_mids_tmp';
 CREATE  TABLE `tblog_path_mids_info`(
   `mid` string, 
   `uid` string,
+  `nick` string,
   `pubtime` string,
   `father_mid` string,
   `root_mid` string,
@@ -95,7 +96,7 @@ grant select on table kol_influence_result to user zhaonan5;
 grant select on table kol_influence_result to user chenpeng6; 
 
 
-grant select on table tblog_path_mids_info to user yonghong1;
+--grant select on table tblog_path_mids_info to user yonghong1;
 grant select on table tblog_path_mids_info to user qinling;
 grant select on table tblog_path_mids_info to user zhaonan5;
 
